@@ -64,3 +64,26 @@ var products = [
     }
 ];
  
+const SelfServiceMachine = {
+    // Fonction qui va contenir les données
+    data() {
+        return {
+            // Récuperer la variable products
+            products: window.products
+        }
+    }
+};
+
+// Monter l'application SelfServiceMachine dans le main avec l'id App
+Vue.createApp(SelfServiceMachine).mount('#app');
+
+/* NOTES 
+
+Les deux point ':' correpondent à v-bind
+'v-on:' peut etre remplacé par un arobase '@'
+
+
+
+
+
+*/
