@@ -71,7 +71,19 @@ const SelfServiceMachine = {
             // Récuperer la variable products
             products: window.products
         }
-    }
+    },
+    methods: {
+        total: function() {
+            var total= 0;
+            // Avec this on accede aux propriétés de donnée
+            this.products.forEach(function(item) {
+                if(item.active){
+                    total += item.price * item.quantity;
+                }
+            });
+            return total.toFixed(2)
+        }
+    },
 };
 
 // Monter l'application SelfServiceMachine dans le main avec l'id App
