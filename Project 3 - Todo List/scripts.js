@@ -1,36 +1,32 @@
-tasks = [
-    {
-        label: 'Lear HTML, CSS & Javascript',
-        isDone:false
-    },
-    {
-        label: 'Improve skills in Vue.js',
-        isDone: false
-    },
-]
-
 const toDoApp = {
 
     data() {
         return {
-            tasks: window.tasks,
-            newTask: {}
+            tasks: [],
+            newTask: {
+                isDone: false
+            }
         }
     },
     methods: {
         addTask: function() {
             if(this.newTask.label){
-                this.newTask.isDone = false
                 this.tasks.push(this.newTask);
                 this.newTask = {};
+                localStorage.setItem("tasks", JSON.stringify(this.tasks))
             }
             else {
                 alert("Please enter a name.")
             }
         },
-        clearAll: function() {
-            this.tasks = []
+        storeTasks(){
+        localStorage.setItem("tasks", JSON.stringify(this.tasks))
+        console.log("updated")
+
         }
+    },
+    created() {
+        this.tasks = localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem("tasks")) : this.tasks;
     },
 };
 
