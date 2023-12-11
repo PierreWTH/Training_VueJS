@@ -1,7 +1,9 @@
 <template>
 
   <div>
-<h1> Hello world</h1>
+<h1 v-html="this.question"></h1>
+
+<h2> Difficulty : {{ this.difficulty}}</h2>
 
 <input type="radio" name="options" value="true">
 <label>True</label><br>
@@ -17,9 +19,38 @@
 
 export default {
   name: 'App',
+  data() {
+    return {
+      question: undefined,
+      incorrectAnswers: undefined,
+      correctAnswers: undefined,
+      difficulty: undefined,
+    }
+  },
+  computed: {
+    answers() {
+      let answers = JSON.parse(JSON.stringify(this.incorrectAnswers));
+      answers.push(this.correctAnswers);
+      return answers
+    }
+  },
+  created() {
+    let apiLink = 'https://opentdb.com/api.php?amount=1&category=18' 
+    this.axios
+    .get(apiLink)
+    .then((response) => {
+      console.log(response.data)
+      this.question = response.data.results[0].question;
+      this.incorrectAnswers = response.data.results[0].incorrect_answers;
+      this.correctAnswers = response.data.results[0].correct_answer;
+      this.difficulty = response.data.results[0].difficulty;
+
+    })
+  },
+  
 }
 
-// https://opentdb.com/api.php?amount=1&category=18
+
 
 </script>
 
