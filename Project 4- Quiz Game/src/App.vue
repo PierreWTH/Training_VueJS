@@ -6,11 +6,11 @@
       <h2> Difficulty : {{ this.difficulty}}</h2>
     
       <template v-for="answer in this.answers" :key="answer">
-        <input type="radio" name="options" value="answer">
+        <input type="radio" name="options" :value="answer" v-model="this.chosenAnswer">
         <label v-html="answer"></label><br>
       </template>
       
-      <button class="send" type="button">Send</button>
+      <button @click="this.submitAnswer" class="send" type="button">Send</button>
     </template>
   </div>
 </template>
@@ -25,6 +25,22 @@ export default {
       incorrectAnswers: undefined,
       correctAnswers: undefined,
       difficulty: undefined,
+      chosenAnswer: undefined
+    }
+  },
+  methods: {
+    submitAnswer() {
+      if(!this.chosenAnswer){
+        alert("Pick one of the option before submit !")
+      }
+      else{
+        if(this.chosenAnswer == this.correctAnswers){
+          alert("Bien joué")
+        }
+        else{
+          alert("Nul giroud")
+        }
+      }
     }
   },
   computed: {
