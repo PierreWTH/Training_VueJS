@@ -6,11 +6,20 @@
       <h2> Difficulty : {{ this.difficulty}}</h2>
     
       <template v-for="answer in this.answers" :key="answer">
-        <input type="radio" name="options" :value="answer" v-model="this.chosenAnswer">
+        <input type="radio" name="options" :value="answer" v-model="this.chosenAnswer" :disabled="this.answerSubmitted" >
         <label v-html="answer"></label><br>
       </template>
       
-      <button @click="this.submitAnswer" class="send" type="button">Send</button>
+      <button @click="this.submitAnswer" v-if="!this.answerSubmitted" class="send" type="button">Send</button>
+
+      <section class="result" v-if="this.answerSubmitted"> 
+        <h4 v-if="this.chosenAnswer == this.correctAnswers" 
+        v-html="'&#9989; Well done ! The answer ' + this.correctAnswers + ' is correct!'"> </h4>
+        <h4 v-if="this.chosenAnswer !== this.correctAnswers"
+        v-html="'&#10060; Sorry you picked the wrong answer ! The correct answer was ' + this.correctAnswers + '.'"></h4>
+        <button class="send" type="button" @click="this.getNewQuestion()">Question suivante </button>
+      </section>
+
     </template>
   </div>
 </template>
@@ -25,7 +34,8 @@ export default {
       incorrectAnswers: undefined,
       correctAnswers: undefined,
       difficulty: undefined,
-      chosenAnswer: undefined
+      chosenAnswer: undefined,
+      answerSubmitted: false
     }
   },
   methods: {
@@ -34,13 +44,31 @@ export default {
         alert("Pick one of the option before submit !")
       }
       else{
+        this.answerSubmitted = true
         if(this.chosenAnswer == this.correctAnswers){
-          alert("Bien joué")
+          console.log("Point au joueur")
         }
         else{
-          alert("Nul giroud")
+          console.log("Point a l'ordi")
         }
       }
+    },
+    getNewQuestion(){
+
+      this.answerSubmitted = false
+      this.chosenAnswer = undefined
+      this.question = undefined
+
+      let apiLink = 'https://opentdb.com/api.php?amount=1&category=18' 
+    this.axios
+    .get(apiLink)
+    .then((response) => {
+      this.question = response.data.results[0].question;
+      this.incorrectAnswers = response.data.results[0].incorrect_answers;
+      this.correctAnswers = response.data.results[0].correct_answer;
+      this.difficulty = response.data.results[0].difficulty;
+
+    })
     }
   },
   computed: {
@@ -51,17 +79,7 @@ export default {
     }
   },
   created() {
-    let apiLink = 'https://opentdb.com/api.php?amount=1&category=18' 
-    this.axios
-    .get(apiLink)
-    .then((response) => {
-      console.log(response.data)
-      this.question = response.data.results[0].question;
-      this.incorrectAnswers = response.data.results[0].incorrect_answers;
-      this.correctAnswers = response.data.results[0].correct_answer;
-      this.difficulty = response.data.results[0].difficulty;
-
-    })
+    this.getNewQuestion()
   },
   
 }
