@@ -1,5 +1,6 @@
 <template>
   <div>
+    <button @click="winCount=0; loseCount=0; this.storeScore()">Reset score</button>
     <ScoreBoard :winCount ="this.winCount"  :loseCount = "this.loseCount"/>
     <template v-if="this.question">  
       <h1 v-html="this.question"></h1>
@@ -11,7 +12,7 @@
         <label v-html="answer"></label><br>
       </template>
       
-      <button @click="this.submitAnswer" v-if="!this.answerSubmitted" class="send" type="button">Send</button>
+      <button @click="this.submitAnswer(); this.storeScore()" v-if="!this.answerSubmitted" class="send" type="button">Send</button>
 
       <section class="result" v-if="this.answerSubmitted"> 
         <h4 v-if="this.chosenAnswer == this.correctAnswers" 
@@ -26,6 +27,8 @@
 </template>
   
 <script>
+
+// TO DO : stocker les scores dans le local storage 
 
 import ScoreBoard from '@/components/ScoreBoard.vue'
 
@@ -74,6 +77,10 @@ export default {
                 this.correctAnswers = response.data.results[0].correct_answer;
                 this.difficulty = response.data.results[0].difficulty;
             });
+        },
+        storeScore(){
+        localStorage.setItem("winCount", JSON.stringify(this.winCount))
+        localStorage.setItem("loseCount", JSON.stringify(this.loseCount))
         }
     },
     computed: {
@@ -85,6 +92,9 @@ export default {
     },
     created() {
         this.getNewQuestion();
+        this.winCount = localStorage.getItem("winCount") ? JSON.parse(localStorage.getItem("winCount")) : this.winCount;
+        this.loseCount = localStorage.getItem("loseCount") ? JSON.parse(localStorage.getItem("loseCount")) : this.loseCount;
+
     },
 }
 

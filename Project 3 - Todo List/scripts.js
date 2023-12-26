@@ -21,8 +21,6 @@ const toDoApp = {
         },
         storeTasks(){
         localStorage.setItem("tasks", JSON.stringify(this.tasks))
-        console.log("updated")
-
         }
     },
     created() {
