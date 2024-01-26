@@ -32,7 +32,9 @@ export default createStore({
       commit('addToBag', product)
     },
     removeFromBag({ commit }, productId){
-      commit('removeFromBag', productId)
+      if(confirm('Are you sure ?')){
+        commit('removeFromBag', productId)
+      }
     }
 
   },
